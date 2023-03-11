@@ -59,7 +59,10 @@ Configuration is done via environment variables. Standard AWS SDK Environment va
 
 ## Roadmap
 
-- [ ] Make a roadmap
+- [ ] Add Kubernetes Manifests (ideally this is put in a separate repo)
+- [ ] Add K3D Support
+- [ ] Add Github Actions CI/CD
+- [ ] See TODO 🔍 comments all around... 
 
 ### Known Issues
 

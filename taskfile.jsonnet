@@ -1,12 +1,8 @@
-local layers = {
-  taskfile: (import "github.com/ghostsquad/practice-layers/taskfile/taskfile.libsonnet"),
-  jb: (import "github.com/ghostsquad/practice-layers/taskfile/jb.libsonnet"),
-  goTaskfile: (import "github.com/ghostsquad/practice-layers/taskfile/go.libsonnet"),
-};
+local taskfile = import "github.com/ghostsquad/practice-layers/taskfile/taskfile.libsonnet";
 
-layers.taskfile +
-layers.jb +
-layers.goTaskfile +
+taskfile +
+(import "github.com/ghostsquad/practice-layers/taskfile/jb.libsonnet") +
+(import "github.com/ghostsquad/practice-layers/taskfile/go.libsonnet") +
 {
   config_+:: {
     project+: {

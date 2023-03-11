@@ -1,0 +1,7 @@
+# ignore everything by default
+*
+# then allowlist what we care about
+# this ensures that as we add new files, we are explicit about what we pull into the docker image
+!**/*.go
+!/go.*
+!LICENSE

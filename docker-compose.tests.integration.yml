@@ -1,0 +1,14 @@
+services:
+  app:
+    image: ${APP_IMAGE}
+    pull_policy: never
+
+  test:
+    image: integration-test-helper
+    build:
+      dockerfile: tests.integration.helper.Dockerfile
+    entrypoint: sh /var/run/test.sh
+    depends_on:
+      - app
+    volumes:
+      - ./hack/test.sh:/var/run/test.sh

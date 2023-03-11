@@ -63,7 +63,5 @@ Configuration is done via environment variables. Standard AWS SDK Environment va
 
 ### Known Issues
 
-1. 
-2. 
-3. There's a slew of app optimizations still left, such as separating `/ping` and `/metrics` endpoints onto different listeners, make logging configurable between text/color and JSON and some other things. This was my first time using Gin.
-4. I didn't configure test coverage or pay attention to that much. Just wrote a few small unit tests and a sanity-check end2end test (just verifies that the app runs and I can /ping it) via docker-compose.
+1. There's a slew of app optimizations still left, such as separating `/ping` and `/metrics` endpoints onto different listeners (separate for application endpoints), make logging configurable between text/color and JSON and some other things. This was my first time using Gin.
+2. I didn't configure test coverage or pay attention to that much. Just wrote a few small unit tests and a sanity-check end2end test (just verifies that the app runs and I can /ping it) via docker-compose.

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/cakehappens/lonely-mountain.git",
+          "subdir": ""
+        }
+      },
+      "version": "d26d20053b69b6ff65c98afe8e84cb9d51070359",
+      "sum": "eSS0VaPopLiOlcJM5WgaDD21ni/O1rrjl5NQOLx3b4g="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/ghostsquad/practice-layers.git",
+          "subdir": ""
+        }
+      },
+      "version": "2056b3435364af0a7a46e890548afdba55019a63",
+      "sum": "bzCPqz1pG9r0smICukMdnoTbfKk5w9ggN8IiaAOQMMQ="
+    }
+  ],
+  "legacyImports": false
+}

@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"regexp"
@@ -15,7 +13,6 @@ import (
 	"github.com/caarlos0/env/v6"
 	"github.com/gin-gonic/gin"
 	"github.com/oklog/run"
-	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -93,6 +90,8 @@ func main() {
 	}
 }
 
+// TODO this is basically a composition root
+// Treat it that way, and keep branching logic to an absolutely minimum
 func setupRouter(cfg config.Config) *gin.Engine {
 	logger := gin.LoggerWithWriter(cfg.IOStreams.Out())
 	r := gin.New()
@@ -138,8 +137,12 @@ func setupRouter(cfg config.Config) *gin.Engine {
 		toParam         = "to"
 	)
 
-	// TODO extract into a separate unit testable form
-	// TODO better error messages, some of these error messages the user should not see
+	convertService, err := NewConvertService(http.Get)
+	if err != nil {
+		panic(err)
+	}
+
+	// TODO better errors/messages, some of these error messages the user should not see
 	// TODO log errors as errors that indicate code problems and/or unrecoverable situations
 	// TODO log errors as warnings that are recoverable, but non-nominal
 	// TODO log interesting events that cannot be captured as metrics (metrics are cheaper and easier than logs!)
@@ -148,85 +151,31 @@ func setupRouter(cfg config.Config) *gin.Engine {
 		currencyTo := c.Params.ByName(toParam)
 		fromAmountStr := c.Params.ByName(fromAmountParam)
 
+		if currencyFrom == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"message": `no "from" currency provided`})
+			return
+		}
+
+		if currencyTo == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"message": `no "to" currency provided`})
+			return
+		}
+
 		fromAmount, err := strconv.ParseFloat(fromAmountStr, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "could not parse amount"})
 			return
 		}
 
-		if currencyFrom == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"message": "no \"from\" currency provided"})
-			return
-		}
-
-		if currencyFrom == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"message": "no \"to\" currency provided"})
-			return
-		}
-
-		url := fmt.Sprintf(
-			"https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/%s/%s.json",
-			currencyFrom,
-			currencyTo,
-		)
-
-		// TODO this could probably be cached
-		// TODO we could examine what the error is and handle it gracefully
-		// Possible Scenarios:
-		// - throttled -> retry with exponential backoff
-		// - bad request -> we did not validate the user input, so maybe we should do that
-		// - bad gateway or other networking related errors -> retry with exponential backoff
-		resp, err := http.Get(url)
+		resp, err := convertService.Convert(currencyFrom, currencyTo, fromAmount)
 		if err != nil {
 			// TODO need to understand Gin a bit more and the various ways that errors can be presented
-			// TODO specifics: can I return a rich object with a stack trace?
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.Wrap(err, "upstream api get").Error()})
+			// specifics: can I return a rich object with a stack trace?
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-		defer resp.Body.Close()
-		body, err := io.ReadAll(resp.Body)
-
-		response := map[string]interface{}{}
-		err = json.Unmarshal(body, &response)
-
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.Wrap(err, "unmarshalling upstream response").Error()})
-			return
-		}
-
-		responseDate, ok := response["date"]
-		if !ok {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.New("unknown response, no date found").Error()})
-		}
-
-		responseDateStr, ok := responseDate.(string)
-		if !ok {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.New("unknown response, date is not a string").Error()})
-		}
-
-		responseConversionRate, ok := response[currencyTo]
-		if !ok {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.Errorf("unknown response, key [%s] not found", currencyTo).Error()})
-		}
-
-		responseConversionRateFloat, ok := responseConversionRate.(float64)
-		if !ok {
-			c.JSON(
-				http.StatusInternalServerError,
-				gin.H{"error": errors.Errorf("unknown response, value of [%s], [%s], is not a float", currencyTo, responseConversionRate).Error()},
-			)
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"date":       responseDateStr,
-			"rate":       responseConversionRateFloat,
-			"from":       currencyFrom,
-			"fromAmount": fromAmount,
-			"to":         currencyTo,
-			// TODO this could result in overflow issues, could use some validation
-			"toAmount": responseConversionRateFloat * fromAmount,
-		})
+		c.JSON(http.StatusOK, resp)
 		return
 	})
 

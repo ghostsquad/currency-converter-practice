@@ -7,6 +7,10 @@ taskfile +
 (import "github.com/ghostsquad/practice-layers/taskfile/go.libsonnet") +
 (import "./config.libsonnet") +
 {
+  env+: {
+    // TODO contribute this upstream
+    GOFLAGS: "-mod=mod",
+  },
   vars+: {
     EXPECTED_GO_VERSION: $.config_.go.expectedVersion,
     K3D_APP_IMAGE: std.join("/", [$.config_.kubernetes.k3d.registry, $.config_.project.repoShort]) + ":{{.GIT_COMMIT}}"

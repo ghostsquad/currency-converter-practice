@@ -2,10 +2,15 @@
 {
   apiVersion: "k3d.io/v1alpha4",
   kind: "Simple",
-  metadata: {
+  metadata+: {
     name: $.config_.kubernetes.k3d.clusterName,
   },
   servers: 1,
   agents: 0,
   image: "docker.io/rancher/k3s:v%s-k3s1" % [$.config_.kubernetes.expectedVersion],
+  kubeAPI+: {
+    // TODO spec.json could probably be generated from jsonnet as well
+    // We care about this port number in that file...
+    hostPort: "53738",
+  },
 }

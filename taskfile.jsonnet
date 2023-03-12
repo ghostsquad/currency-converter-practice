@@ -1,19 +1,21 @@
 local taskfile = import "github.com/ghostsquad/practice-layers/taskfile/taskfile.libsonnet";
 
+// TODO tanka doesn't see config items set in these layers! :(
+// Error: evaluating jsonnet: RUNTIME ERROR: Field does not exist: repoShort
 taskfile +
 (import "github.com/ghostsquad/practice-layers/taskfile/jb.libsonnet") +
 (import "github.com/ghostsquad/practice-layers/taskfile/go.libsonnet") +
 (import "./config.libsonnet") +
 {
-  # TODO Var order matters, but since this file is dynamically generated from jsonnet, we lose ordering
-  # Regenerating based on this file will result in problems.
-  # !!! Don't forget to fix the ordering in Taskfile.yml in the interm
-  # https://github.com/go-task/task/issues/1051
   vars+: {
     EXPECTED_GO_VERSION: $.config_.go.expectedVersion,
     K3D_APP_IMAGE: std.join("/", [$.config_.kubernetes.k3d.registry, $.config_.project.repoShort]) + ":{{.GIT_COMMIT}}"
   },
   tasks+: {
+    # TODO Var order matters, but since this file is dynamically generated from jsonnet, we lose ordering
+    # Regenerating based on this file will result in problems.
+    # !!! Don't forget to fix the ordering in Taskfile.yml in the interm
+    # https://github.com/go-task/task/issues/1051
     "taskfile:gen"+: {
       deps+: [$.tasks["jb:install"].name_],
     },
@@ -41,8 +43,14 @@ taskfile +
       // {{.CLI_ARGS}} are passed to jb:install as well, which is a problem
       //.WithDeps($.tasks["jb:install"].name_)
     ,
+    "tk:show": taskfile.Task("tk:show")
+      .WithCmds("tk show --tla-str tag={{.GIT_COMMIT}} {{.CLI_ARGS}}")
+    ,
+    "tk:apply": taskfile.Task("tk:apply")
+      .WithCmds("tk apply --tla-str tag={{.GIT_COMMIT}} {{.CLI_ARGS}}")
+    ,
     "publish:k3d": taskfile.Task("publish:k3d")
-      .withCmds(
+      .WithCmds(
         taskfile.CmdTask("build")
           .WithVars({
             PUSH_IMAGE: '{{.K3D_APP_IMAGE}}',

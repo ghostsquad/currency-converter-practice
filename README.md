@@ -50,6 +50,21 @@ In a separate shell
 task http:metrics
 ```
 
+### Deploying to K3D
+
+```shell
+task k3d:up
+task k3d:registry:up
+
+# NOTE: registry up prints a message to update /etc/hosts
+# This is not done automatically, as that is a system-wide change 
+# that I feel is something the user should handle
+# TODO investigate using dnsmasq or something else to prevent this requirement
+
+task publish:k3d
+task tk:apply -- environments/default
+```
+
 ### Configuration
 
 Configuration is done via environment variables. Standard AWS SDK Environment variables supported, as well as OIDC/EC2 authentication methods.

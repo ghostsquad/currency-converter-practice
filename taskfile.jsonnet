@@ -18,6 +18,9 @@ taskfile +
     EXPECTED_GO_VERSION: "1.20.2",
   },
   tasks+: {
+    "taskfile:gen"+: {
+      deps+: [$.tasks["jb:install"].name_],
+    },
     run+: {
       cmds: [
         // TODO might be better for upstream not to assume `./...` is the path

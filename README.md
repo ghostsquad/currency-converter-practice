@@ -67,7 +67,7 @@ task tk:apply -- environments/default
 
 ### Configuration
 
-Configuration is done via environment variables. Standard AWS SDK Environment variables supported, as well as OIDC/EC2 authentication methods.
+Configuration is done via environment variables.
 
 | Variable       | Required | Default | Description                                                    |
 |----------------|----------|---------|----------------------------------------------------------------|

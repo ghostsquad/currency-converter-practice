@@ -3,7 +3,6 @@ package config
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 )
 
 type stateful struct {
@@ -37,7 +36,7 @@ func NewStateful(in io.Reader, out, errOut io.Writer) IOStreams {
 func NewDiscard() IOStreams {
 	return &stateful{
 		in:     &bytes.Buffer{},
-		out:    ioutil.Discard,
-		errOut: ioutil.Discard,
+		out:    io.Discard,
+		errOut: io.Discard,
 	}
 }

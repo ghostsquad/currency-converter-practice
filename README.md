@@ -26,6 +26,9 @@ A simple Golang webapp to get currency exchange information.
 
 # TODO check that all tools have default plugins available
 asdf plugin-add task https://github.com/particledecay/asdf-task.git
+asdf plugin-add tanka
+asdf plugin-add k3d
+
 asdf install
 
 # TODO add this to setup task (extra credit: cross platform?)

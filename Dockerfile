@@ -12,7 +12,7 @@ RUN go mod download && go mod verify
 COPY . .
 # TODO this path here is the same one we use in `task run`
 # There's an opportunity to unify these values to ensure desync doesn't happen
-RUN go build -v -o /usr/local/bin/app ./cmd/app
+RUN go build -mod=readonly -v -o /usr/local/bin/app ./cmd/app
 
 FROM $DEBIAN_IMAGE
 

@@ -3,3 +3,5 @@ jb 0.5.1
 go-jsonnet 0.19.1
 dasel 2.1.1
 task 3.22.0
+tanka 0.24.0
+k3d 5.4.8

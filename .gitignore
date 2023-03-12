@@ -12,10 +12,7 @@
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Jsonnet Vendor
-/jsonnet-vendor
+vendor/
 
 # Jetbrains
 /.idea

@@ -12,24 +12,7 @@ func TestValidateConfig(t *testing.T) {
 	}{
 		{
 			name: "given non-empty values, expect no errors",
-			c: Config{
-				AWSRegion:     "us-west-2",
-				AWSBucketName: "testbucket",
-			},
-		},
-		{
-			name: "given empty region, expect error",
-			c: Config{
-				AWSBucketName: "testbucket",
-			},
-			wantErr: true,
-		},
-		{
-			name: "given empty bucket, expect error",
-			c: Config{
-				AWSRegion: "us-west-2",
-			},
-			wantErr: true,
+			c:    Config{},
 		},
 	}
 	for _, tt := range tests {

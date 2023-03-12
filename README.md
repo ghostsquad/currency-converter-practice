@@ -22,11 +22,11 @@ A simple Golang webapp to get currency exchange information.
 ### One-Time
 ```shell
 # Ensure you have asdf installed
-# TODO check that all tools have default plugins available
-asdf install
+# brew install asdf
 
-# TODO find a decent way to include task in asdf and get autocomplete scripts working
-brew install go-task/tap/go-task
+# TODO check that all tools have default plugins available
+asdf plugin-add task https://github.com/particledecay/asdf-task.git
+asdf install
 
 # TODO add this to setup task (extra credit: cross platform?)
 # this is needed for sponge https://linux.die.net/man/1/sponge

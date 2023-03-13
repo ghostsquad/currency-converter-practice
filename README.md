@@ -50,11 +50,17 @@ In a separate shell
 task http:metrics
 ```
 
+### Testing Via Docker-Compose
+
+```shell
+task test:integration
+```
+
 ### Deploying to K3D
 
 ```shell
-task k3d:up
-task k3d:registry:up
+# TODO combine these
+task k3d:create
 
 # NOTE: registry up prints a message to update /etc/hosts
 # This is not done automatically, as that is a system-wide change 
@@ -63,6 +69,7 @@ task k3d:registry:up
 
 task publish:k3d
 task tk:apply -- environments/default
+task test:integration:k3d
 ```
 
 ### Configuration

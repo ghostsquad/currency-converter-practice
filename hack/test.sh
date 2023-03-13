@@ -3,7 +3,8 @@
 # TODO why isn't this a go test?? 🤦
 set -euxo pipefail
 
-HOSTNAME="${1:-app}"
+HOSTNAME="${1}"
+HOSTPORT="${2}"
 
 # TODO keep your bash script libraries and stuff open source
 # This is a rewrite of stuff you've done in the past, but don't have access to
@@ -44,8 +45,8 @@ TestGet () {
   fi
 }
 
-TestGet "http://${HOSTNAME}:8080/ping" 1>&2
-testResult=$(TestGet "http://${HOSTNAME}:8080/convert/eur/1/jpy" --body)
+TestGet "http://${HOSTNAME}:${HOSTPORT}/ping" 1>&2
+testResult=$(TestGet "http://${HOSTNAME}:${HOSTPORT}/convert/eur/1/jpy" --body)
 
 TestResultKey () {
   local key="$1"

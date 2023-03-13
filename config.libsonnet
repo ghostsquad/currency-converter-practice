@@ -15,7 +15,7 @@
       full: error "image.full isn't available without a tag, read at runtime",
       imageNoTag: self.remoteNameNoTag,
       remoteNameNoTag: std.join("/", ["docker.io", c.project.repoShort]),
-      k3dRemoteNoTag: std.join("/", [c.kubernetes.k3d.registry, c.project.repoShort])
+      k3dRemoteNoTag: std.join("/", [c.kubernetes.k3d.registry.nameAndHostPort, c.project.repoShort])
     },
     app+: {
       ports+: {
@@ -38,11 +38,15 @@
       // https://www.w3schools.com/python/numpy/numpy_array_slicing.asp
       versionShort: std.join('.', std.split(self.expectedVersion, '.')[0:2]),
       k3d+: {
-        registryNameShort: "registry-default",
-        registryName: std.join("-", ["k3d", self.registryNameShort]),
-        registry: std.join(":", [self.registryName, std.toString(self.registryPort)]),
-        registryPort: 5100,
+        registry: {
+          name: "registry.localhost",
+          hostPort: 5001,
+          nameAndHostPort: self.name + ":" + self.hostPort,
+          // This will be prefixed with the absolute path of the user's home directory
+          localDataPathRelative: ".k3d/images",
+        },
         clusterName: 'k3s-default',
+        hostPort: 9080
       },
       labels: {
         app: c.project.name,

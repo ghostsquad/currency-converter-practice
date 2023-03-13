@@ -7,7 +7,7 @@ services:
     image: integration-test-helper
     build:
       dockerfile: tests.integration.helper.Dockerfile
-    entrypoint: sh /var/run/test.sh
+    entrypoint: sh /var/run/test.sh app "${SUBJECT_HOSTPORT}"
     depends_on:
       - app
     volumes:

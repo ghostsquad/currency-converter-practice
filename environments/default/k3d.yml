@@ -3,6 +3,19 @@ agents: 0
 apiVersion: k3d.io/v1alpha4
 image: docker.io/rancher/k3s:v1.26.2-k3s1
 kind: Simple
+kubeAPI:
+  hostPort: "53738"
 metadata:
   name: k3s-default
+ports:
+- nodeFilters:
+  - loadbalancer
+  port: 9080:80
+registries:
+  create:
+    host: 0.0.0.0
+    hostPort: "5001"
+    name: registry.localhost
+    volumes:
+    - /Users/ghostsquad/.k3d/images:/var/lib/registry
 servers: 1

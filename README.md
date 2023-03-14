@@ -15,7 +15,25 @@
 
 ## Introduction
 
-A simple Golang webapp to get currency exchange information.
+A simple Golang webapp to get currency exchange information, purposefully overengineered to showcase all the different components of a production-ready application, including:
+
+- Local Testing
+- Container Testing (via `docker-compose`)
+- Local K8s Testing (via `k3d`)
+- TDD
+- Metrics
+- Readiness/Liveness Probes (/ping)
+- Using Task (an alternative to make)
+- Layers (a custom jsonnet-based system for sharing configuration across process boundaries)
+- Leaning into Git (automatically, such as using the SHA for publishing images)
+- and more!
+
+📌 **Note**
+
+The scope of this project increased exponentially as I was working on it, and I had to decide how far to actually take certain things...
+Otherwise I'd simply be working on this forever. 
+
+The goal is to continuously refine this project and bake more and more "defaults" into reusable libraries and configuration "Layers".
 
 ## Getting Started
 

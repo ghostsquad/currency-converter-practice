@@ -89,7 +89,7 @@ Configuration is done via environment variables.
 - [ ] Add Github Actions CI/CD
 - [ ] See TODO 🔍 comments all around... 
 
-### Known Issues
+### Known Issues/Notes
 
 1. There's a slew of app optimizations still left, such as separating `/ping` and `/metrics` endpoints onto different listeners (separate for application endpoints), make logging configurable between text/color and JSON and some other things. This was my first time using Gin.
 2. I didn't configure test coverage or pay attention to that much. Just wrote a few small unit tests and a sanity-check end2end test (just verifies that the app runs, I can /ping it, and a small assertion of the expected output) via docker-compose and k3d.
@@ -101,3 +101,5 @@ Configuration is done via environment variables.
    4. run `task <blah>` (whatever it is what I was working on at the time)
 
    Solution: When I first found Taskfile, I really liked it, but it turns out to not really be as flexible or intuitive as I prefer. I started a project called [fngo](https://fngo.dev/) as a replacement for Task, but I'm still in the early stages of really understanding what I want, and how I want to represent it.
+5. Layers is still a WIP. Because of that, it was a bit painful to update 2 repos when I found some good patterns. But that's also the point, is that those patterns are now available for future projects without much work.
+6. Jsonnet + Taskfile is weird... It kind of reminds me of Terraform + Jsonnet, in that there are some values that are known at runtime and other values that are known at compile-time (jsonnet natively derived/defined values). Figuring out the best way to present those 2 types and keep things orderly and making sense will be a huge step towards making Layers and/or fngo really nice to use.
